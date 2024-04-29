@@ -1,46 +1,52 @@
 <template>
-  <section
-    :style="`background: ${options.color}`"
-    @drop="onDrop($event, options.id)"
-    @dragover.prevent
-    @dragenter.prevent>
-    <div class="title">
-      <h2>
-        {{ options.title }}
-      </h2>
-      <div class="counter">
-        <span>{{ cards.length }}</span>
+  <div>
+    <CardPanel
+        :options="props.options"
+    ></CardPanel>
+    <section
+        :style="`background: ${options.color}`"
+        @drop="onDrop($event, options.id)"
+        @dragover.prevent
+        @dragenter.prevent>
+      <div class="title">
+        <h2>
+          {{ options.title }}
+        </h2>
+        <div class="counter">
+          <span>{{ cards.length }}</span>
+        </div>
       </div>
-    </div>
-    <v-btn
-      icon="mdi-plus"
-      variant="tonal"
-      class="mt-5"
-      color="white"
-      @click="isNewCardDialogOpen = true" />
+      <v-btn
+          icon="mdi-plus"
+          variant="tonal"
+          class="mt-5"
+          color="white"
+          @click="isNewCardDialogOpen = true"/>
 
-    <CardItem
-      v-for="(card, index) in cards"
-      draggable="true"
-      :key="index"
-      :card="card"
-      :options="props.options"
-      @delete-card="deleteCard(card.id)"
-      @dragstart="onDragStart($event, card)" />
+      <CardItem
+          v-for="(card, index) in cards"
+          draggable="true"
+          :key="index"
+          :card="card"
+          :options="props.options"
+          @delete-card="deleteCard(card.id)"
+          @dragstart="onDragStart($event, card)"/>
 
-    <CardForm
-      title="Добавление новой карточки"
-      v-model="isNewCardDialogOpen"
-      :form="form"
-      @save-card="addCard"
-      @close-form="isNewCardDialogOpen = false" />
-  </section>
+      <CardForm
+          title="Добавление новой карточки"
+          v-model="isNewCardDialogOpen"
+          :form="form"
+          @save-card="addCard"
+          @close-form="isNewCardDialogOpen = false"/>
+    </section>
+  </div>
 </template>
 
 <script setup>
-  import { ref, inject } from 'vue';
+  import {ref, inject} from 'vue';
   import CardItem from './CardItem.vue';
   import CardForm from './CardForm.vue';
+  import CardPanel from "./CardPanel.vue";
 
   const firstList = inject('firstList');
   const secondList = inject('secondList');
@@ -77,20 +83,24 @@
         break;
     }
   }
+
   getLocalCards();
 
   function addCard() {
     cards.value.unshift(form.value);
     isNewCardDialogOpen.value = false;
   }
+
   function deleteCard(id) {
     cards.value = cards.value.filter((card) => card.id != id);
   }
+
   function onDragStart(event, item) {
     event.dataTransfer.dropEffect = 'move';
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('itemId', item.id.toString());
   }
+
   function onDrop(event, optionsId) {
     const itemId = parseInt(event.dataTransfer.getData('itemId'));
     let otherLists = [];
@@ -134,7 +144,7 @@
 <style lang="scss" scoped>
   section {
     padding: 10px;
-    width: 400px;
+    width: 380px;
     min-height: 500px;
     height: fit-content;
     border-radius: 10px;

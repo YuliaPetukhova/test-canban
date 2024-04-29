@@ -52,7 +52,7 @@
 
 <style scoped>
   main {
-    margin: 5% 0;
+    margin: 3% 0;
     display: flex;
     justify-content: center;
     gap: 5%;
